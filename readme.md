@@ -13,9 +13,9 @@ The minimum requirements will be that the user can:
 
 The app is a single view, with no special controller menu or the likes. The view is depicted here:
 
-NB: Some combination of blue ink, regular paper, and phone camera results in poor picture. I will recreate the picture and upload that. This is the current state:
+NB: Some combination of blue ink, regular paper, and phone camera results in poor picture. Also Atom keeps rotating the image against my will. I will recreate the picture and upload a proper picture at some point. This is the current state:
 
-![Was rotated automatically when pulled into Atom](https://github.com/pangland/JavaScript-Proposal/why_is_this_rotated.jpg)
+![Was rotated automatically when pulled into Atom](/why_is_this_rotated.jpg)
 
 
 ## Architecture and Technologies ##
