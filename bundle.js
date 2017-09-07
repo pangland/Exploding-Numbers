@@ -141,16 +141,24 @@ class Game {
 
   move() {
     this.fallingNumberBlocks.forEach((column, idx) => {
-      while (column[0].checkCollision(this.staticNumberBlocks[idx].last()))
-
+      while (column[0] && column[0]
+        .checkCollision(this.staticNumberBlocks[idx].slice(-1)[0])) {
+        debugger
+        column[0].syncPosition(450 - 100 * this.staticNumberBlocks[idx].length);
+        this.staticNumberBlocks[idx].push(column.shift());
+      }
 
       column.forEach((number) => {
-        number.pos[0]
+        if (!number.checkCollision(this.staticNumberBlocks[idx].slice(-1)[0])) {
+          number.move();
+        }
       });
     });
   }
 
   draw(ctx) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, 1000, 500);
     this.allNumberBlocks.forEach((numberColumn) => {
       numberColumn.forEach((number) => number.draw(ctx));
     });
@@ -225,8 +233,8 @@ class Number {
   }
 
   draw(ctx) {
-    ctx.fillStyle = "black";
-    ctx.fillRect(this.pos[0], this.pos[1] - this.vel * 10, 100, 100);
+    // ctx.fillStyle = "black";
+    // ctx.fillRect(this.pos[0], this.pos[1] - this.vel * 10, 100, 100);
     ctx.fillStyle = this.color;
     ctx.font = '18pt Arial';
     ctx.fillRect(this.pos[0], this.pos[1], 100, 100);
@@ -244,6 +252,14 @@ class Number {
 
   randomColor() {
     return colors[Math.floor(Math.random() * 10) % colors.length];
+  }
+
+  checkCollision(otherNum) {
+    return this.pos + this.vel * 10 > otherNum.pos;
+  }
+
+  syncPosition(height) {
+    this.pos[1] = height;
   }
 }
 
@@ -305,7 +321,7 @@ class GameView {
       this.game.move();
       this.game.createNumber();
       this.game.draw(this.ctx);
-    }, 4000);
+    }, 1000);
     // setInterval(() => {
     //   this.game.createNumber();
     //   this.game.draw(this.ctx);
