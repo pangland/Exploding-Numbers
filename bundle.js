@@ -65,9 +65,244 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__game_view_js__);
+// const Game = require("./game");
+// const GameView = require("./game_view");
+
+
+
+document.write("It breathes");
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("game-canvas");
+  canvas.width = 1000;
+  canvas.height = 550;
+
+  const ctx = canvas.getContext("2d");
+  const game = new __WEBPACK_IMPORTED_MODULE_0__game_js__["a" /* default */]();
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, 1000, 550);
+  new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start();
+});
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(2);
+
+
+const horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+const blocksPerColumn = Array(10).fill(0);
+
+class Game {
+  constructor() {
+    this.allNumberBlocks = [[], [], [], [], [], [], [], [], [], []]
+
+    // this.allNumberBlocks = Array(10);
+    //
+    // this.allNumberBlocks.forEach((idx) => {
+    //   this.allNumberBlocks[idx] = [];
+    // });
+
+    // this.staticNumberBlocks = Array(10);
+    // this.staticNumberBlocks.forEach((idx) => {
+    //   this.staticNumberBlocks[idx] = [];
+    // });
+    this.staticNumberBlocks = [[], [], [], [], [], [], [], [], [], []]
+  }
+
+  fillBottomRow() {
+    const vertPosition = 450;
+    horPositions.forEach((pos, idx) => {
+      this.allNumberBlocks[idx].push(new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([pos, vertPosition]));
+      this.staticNumberBlocks[idx].push(new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([pos, vertPosition]));
+      this.incrementBlocksPerColumn(idx);
+    });
+  }
+
+  createNumber() {
+    const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([this.randomStartingPos(), 50]);
+  }
+
+  incrementBlocksPerColumn(columnNumber) {
+    blocksPerColumn[columnNumber] += 1;
+  }
+
+  decrementBlocksPerColumn(columnNumber) {
+    blocksPerColumn[columnNumber] -= 1;
+  }
+
+  randomStartingPos() {
+    return horPositions[(Math.random() * 10).floor()];
+  }
+
+  draw(ctx) {
+    this.allNumberBlocks.forEach((numberColumn) => {
+      numberColumn.forEach((number) => number.draw(ctx));
+    });
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Game);
+// module.exports = Game;
+
+// const Asteroid = require("./asteroid.js");
+// // const Bullet = require("./bullet.js");
+// // const Ship = require("./ship.js");
+//
+// function Game () {
+//   const DIM_X = 500;
+//   const DIM_Y = 500;
+//   const NUM_ASTEROIDS = 30;
+//
+//   this.asteroids = this.addAsteroids(NUM_ASTEROIDS, DIM_X, DIM_Y);
+// }
+//
+// Game.prototype.addAsteroids = function (count, dimX, dimY) {
+//   const asteroids = [];
+//
+//   for (let i = 0; i < count; i++) {
+//     asteroids.push(new Asteroid(this.randomPosition(dimX, dimY)));
+//   }
+//
+//   return asteroids;
+// };
+//
+// Game.prototype.randomPosition = function (dimX, dimY) {
+//   let randX = Math.random() * dimX;
+//   let randY = Math.random() * dimY;
+//   return [randX, randY];
+// };
+//
+// Game.prototype.draw = function (ctx) {
+//   ctx.clearRect(0,0,500,500);
+//   this.asteroids.forEach(function (el) {
+//     el.draw(ctx);
+//   });
+// };
+//
+// Game.prototype.move = function () {
+//   this.asteroids.forEach(function (el) {
+//     el.move();
+//   });
+// };
+//
+// module.exports = Game;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// import MovingObject from './moving_object.js';
+
+const colors = ["pink", "red", "blue", "lightblue", "darkblue"];
+const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+// 'extends MovingObject' for if we end up using it
+class Number {
+  constructor(pos) {
+    this.pos = pos;
+    this.vel = this.randomVec(5);
+    this.color = this.randomColor();
+
+    this.number = Math.floor(Math.random() * 10);
+  }
+
+  draw(ctx) {
+    ctx.font = '18pt Arial';
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.pos[0], this.pos[1], 100, 100);
+    ctx.fillStyle = "black";
+    ctx.fillText(this.number, this.pos[0] + 43, this.pos[1] + 60);
+  }
+
+  move() {
+    this.pos[1] = this.pos[0] + this.vel;
+  }
+
+  randomVec(length) {
+    return 5 * Math.random() * 10;
+  }
+
+  randomColor() {
+    return colors[Math.floor(Math.random() * 10) % colors.length];
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Number);
+// module.exports = Number;
+
+
+
+// Spacerock. It inherits from MovingObject.
+
+
+
+
+// const MovingObject = require("./moving_object.js");
+// const Util = require("./utils.js");
+//
+//
+//
+// Util.inherits(Asteroid, MovingObject);
+//
+// function Asteroid(pos) {
+//   const COLOR = "pink";
+//   const RADIUS = 4;
+//
+//   const astProperties = {
+//     pos: pos,
+//     vel: randomVec(5),
+//     color: COLOR,
+//     radius: RADIUS
+//   };
+//
+//   MovingObject.call(this, astProperties);
+// }
+//
+// const randomVec = function (length) {
+//   const deg = 2 * Math.PI * Math.random();
+//   return Util.scale([Math.sin(deg), Math.cos(deg)], length);
+// };
+//
+// module.exports = Asteroid;
+
+
+/***/ }),
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports) {
 
+class GameView {
+  constructor(game, ctx) {
+    this.game = game;
+    this.ctx = ctx;
+  }
+
+  start() {
+    this.game.fillBottomRow();
+    this.game.draw(this.ctx);
+    // setInterval(() => {
+    //   this.game.createNumber();
+    //   this.game.draw(this.ctx);
+    // }, 2000);
+  }
+}
+
+module.exports = GameView;
+// export default GameView;
 
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=bundle.js.map
