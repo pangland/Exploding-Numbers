@@ -104,19 +104,9 @@ const blocksPerColumn = Array(10).fill(0);
 
 class Game {
   constructor() {
-    this.allNumberBlocks = [[], [], [], [], [], [], [], [], [], []]
-
-    // this.allNumberBlocks = Array(10);
-    //
-    // this.allNumberBlocks.forEach((idx) => {
-    //   this.allNumberBlocks[idx] = [];
-    // });
-
-    // this.staticNumberBlocks = Array(10);
-    // this.staticNumberBlocks.forEach((idx) => {
-    //   this.staticNumberBlocks[idx] = [];
-    // });
-    this.staticNumberBlocks = [[], [], [], [], [], [], [], [], [], []]
+    this.allNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
+    this.fallingNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
+    this.staticNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
   }
 
   fillBottomRow() {
@@ -129,7 +119,12 @@ class Game {
   }
 
   createNumber() {
-    const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([this.randomStartingPos(), 50]);
+    const randomColumn = this.randomStartingPos();
+    this.incrementBlocksPerColumn(randomColumn);
+    const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([randomColumn, 50]);
+    debugger
+    this.fallingNumberBlocks[randomColumn / 100].push(newNumber);
+    this.allNumberBlocks[randomColumn / 100].push(newNumber);
   }
 
   incrementBlocksPerColumn(columnNumber) {
@@ -141,7 +136,18 @@ class Game {
   }
 
   randomStartingPos() {
-    return horPositions[(Math.random() * 10).floor()];
+    return horPositions[Math.floor(Math.random() * 10)];
+  }
+
+  move() {
+    this.fallingNumberBlocks.forEach((column, idx) => {
+      while (column[0].checkCollision(this.staticNumberBlocks[idx].last()))
+
+
+      column.forEach((number) => {
+        number.pos[0]
+      });
+    });
   }
 
   draw(ctx) {
@@ -219,15 +225,17 @@ class Number {
   }
 
   draw(ctx) {
-    ctx.font = '18pt Arial';
+    ctx.fillStyle = "black";
+    ctx.fillRect(this.pos[0], this.pos[1] - this.vel * 10, 100, 100);
     ctx.fillStyle = this.color;
+    ctx.font = '18pt Arial';
     ctx.fillRect(this.pos[0], this.pos[1], 100, 100);
     ctx.fillStyle = "black";
     ctx.fillText(this.number, this.pos[0] + 43, this.pos[1] + 60);
   }
 
   move() {
-    this.pos[1] = this.pos[0] + this.vel;
+    this.pos[1] = this.pos[1] + this.vel * 10;
   }
 
   randomVec(length) {
@@ -292,6 +300,12 @@ class GameView {
   start() {
     this.game.fillBottomRow();
     this.game.draw(this.ctx);
+
+    setInterval(() => {
+      this.game.move();
+      this.game.createNumber();
+      this.game.draw(this.ctx);
+    }, 4000);
     // setInterval(() => {
     //   this.game.createNumber();
     //   this.game.draw(this.ctx);
