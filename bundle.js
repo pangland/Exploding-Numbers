@@ -122,7 +122,7 @@ class Game {
     const randomColumn = this.randomStartingPos();
     this.incrementBlocksPerColumn(randomColumn);
     const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([randomColumn, 50]);
-    debugger
+    // debugger
     this.fallingNumberBlocks[randomColumn / 100].push(newNumber);
     this.allNumberBlocks[randomColumn / 100].push(newNumber);
   }
@@ -136,7 +136,14 @@ class Game {
   }
 
   randomStartingPos() {
-    return horPositions[Math.floor(Math.random() * 10)];
+    const filteredPositions = [];
+    horPositions.forEach((column, idx) => {
+      if (blocksPerColumn[idx] < 5 && this.fallingNumberBlocks[idx].slice(-1)[0].pos[1] >= 150) {
+        filteredPositions.push(horPositions[idx]);
+      }
+    });
+    // return horPositions[Math.floor(Math.random() * 10)];
+    return filteredPositions[Math.floor(Math.random() * 10)];
   }
 
   move() {
@@ -148,8 +155,12 @@ class Game {
         this.staticNumberBlocks[idx].push(column.shift());
       }
 
-      column.forEach((number) => {
-        if (!number.checkCollision(this.staticNumberBlocks[idx].slice(-1)[0])) {
+      if (column[0]) column[0].move();
+      column.slice(1).forEach((number, jdx) => {
+        // if (!number.checkCollision(this.staticNumberBlocks[idx].slice(-1)[0])) {
+        //   number.move();
+        // }
+        if (!number.checkCollision(this.fallingNumberBlocks[idx][jdx])) {
           number.move();
         }
       });
@@ -243,11 +254,11 @@ class Number {
   }
 
   move() {
-    this.pos[1] = this.pos[1] + this.vel * 10;
+    this.pos[1] = this.pos[1] + this.vel;
   }
 
   randomVec(length) {
-    return 5 * Math.random() * 10;
+    return Math.random();
   }
 
   randomColor() {
@@ -255,7 +266,7 @@ class Number {
   }
 
   checkCollision(otherNum) {
-    return this.pos + this.vel * 10 > otherNum.pos;
+    return this.pos[1] + this.vel + 100 > otherNum.pos[1];
   }
 
   syncPosition(height) {
@@ -321,7 +332,12 @@ class GameView {
       this.game.move();
       this.game.createNumber();
       this.game.draw(this.ctx);
-    }, 1000);
+    }, 2000);
+
+    setInterval(() => {
+      this.game.move();
+      this.game.draw(this.ctx);
+    }, 10)
     // setInterval(() => {
     //   this.game.createNumber();
     //   this.game.draw(this.ctx);
