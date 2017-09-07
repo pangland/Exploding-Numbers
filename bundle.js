@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 const horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-const blocksPerColumn = Array(10).fill(0);
+const blocksPerColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 class Game {
   constructor() {
@@ -120,15 +120,16 @@ class Game {
 
   createNumber() {
     const randomColumn = this.randomStartingPos();
-    this.incrementBlocksPerColumn(randomColumn);
+    this.incrementBlocksPerColumn(Math.round(randomColumn / 100));
     const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([randomColumn, 50]);
     // debugger
     this.fallingNumberBlocks[randomColumn / 100].push(newNumber);
     this.allNumberBlocks[randomColumn / 100].push(newNumber);
+    console.log(blocksPerColumn);
   }
 
   incrementBlocksPerColumn(columnNumber) {
-    blocksPerColumn[columnNumber] += 1;
+    blocksPerColumn[columnNumber] = blocksPerColumn[columnNumber] + 1;
   }
 
   decrementBlocksPerColumn(columnNumber) {
@@ -138,19 +139,20 @@ class Game {
   randomStartingPos() {
     const filteredPositions = [];
     horPositions.forEach((column, idx) => {
-      if (blocksPerColumn[idx] < 5 && this.fallingNumberBlocks[idx].slice(-1)[0].pos[1] >= 150) {
+      if (!this.fallingNumberBlocks[idx][0] && blocksPerColumn[idx] < 5) {
+        filteredPositions.push(horPositions[idx]);
+      } else if (blocksPerColumn[idx] < 5 && this.fallingNumberBlocks[idx].slice(-1)[0].pos[1] >= 150) {
         filteredPositions.push(horPositions[idx]);
       }
     });
     // return horPositions[Math.floor(Math.random() * 10)];
-    return filteredPositions[Math.floor(Math.random() * 10)];
+    return filteredPositions[Math.floor(Math.random() * 10) % filteredPositions.length];
   }
 
   move() {
     this.fallingNumberBlocks.forEach((column, idx) => {
       while (column[0] && column[0]
         .checkCollision(this.staticNumberBlocks[idx].slice(-1)[0])) {
-        debugger
         column[0].syncPosition(450 - 100 * this.staticNumberBlocks[idx].length);
         this.staticNumberBlocks[idx].push(column.shift());
       }
