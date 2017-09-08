@@ -70,7 +70,7 @@
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__game_view_js__);
 // const Game = require("./game");
 // const GameView = require("./game_view");
@@ -88,6 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 550);
   new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start();
+
+  document.addEventListener("click", () => {
+    game.handleClick();
+  });
 });
 
 
@@ -96,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(3);
 
 
 const horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
@@ -176,6 +180,16 @@ class Game {
       numberColumn.forEach((number) => number.draw(ctx));
     });
   }
+
+  handleClick(ctx) {
+    this.allNumberBlocks.forEach((columns) => {
+      columns.forEach((number) => {
+        if (number.isClicked(event.screenX, event.screenY)) {
+          console.log(number.number);
+        }
+      });
+    });
+  }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Game);
@@ -227,6 +241,41 @@ class Game {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+class GameView {
+  constructor(game, ctx) {
+    this.game = game;
+    this.ctx = ctx;
+  }
+
+  start() {
+    this.game.fillBottomRow();
+    this.game.draw(this.ctx);
+
+    setInterval(() => {
+      this.game.move();
+      this.game.createNumber();
+      this.game.draw(this.ctx);
+    }, 2000);
+
+    setInterval(() => {
+      this.game.move();
+      this.game.draw(this.ctx);
+    }, 10)
+    // setInterval(() => {
+    //   this.game.createNumber();
+    //   this.game.draw(this.ctx);
+    // }, 2000);
+  }
+}
+
+module.exports = GameView;
+// export default GameView;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -274,6 +323,14 @@ class Number {
   syncPosition(height) {
     this.pos[1] = height;
   }
+
+  isClicked(mouseX, mouseY) {
+    const pos = this.pos;
+    const verticalMatch = mouseY >= pos[1] && mouseY < pos[1] + 100;
+    const horizontalMatch = mouseX >= pos[0] && mouseY < pos[0] + 100;
+    debugger
+    return verticalMatch && horizontalMatch;
+  }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Number);
@@ -313,42 +370,6 @@ class Number {
 // };
 //
 // module.exports = Asteroid;
-
-
-/***/ }),
-/* 3 */,
-/* 4 */
-/***/ (function(module, exports) {
-
-class GameView {
-  constructor(game, ctx) {
-    this.game = game;
-    this.ctx = ctx;
-  }
-
-  start() {
-    this.game.fillBottomRow();
-    this.game.draw(this.ctx);
-
-    setInterval(() => {
-      this.game.move();
-      this.game.createNumber();
-      this.game.draw(this.ctx);
-    }, 2000);
-
-    setInterval(() => {
-      this.game.move();
-      this.game.draw(this.ctx);
-    }, 10)
-    // setInterval(() => {
-    //   this.game.createNumber();
-    //   this.game.draw(this.ctx);
-    // }, 2000);
-  }
-}
-
-module.exports = GameView;
-// export default GameView;
 
 
 /***/ })
