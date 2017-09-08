@@ -89,8 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
   ctx.fillRect(0, 0, 1000, 550);
   new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start();
 
-  document.addEventListener("click", () => {
-    game.handleClick();
+  canvas.addEventListener("click", (e) => {
+    game.handleClick(e, ctx);
   });
 });
 
@@ -129,7 +129,6 @@ class Game {
     // debugger
     this.fallingNumberBlocks[randomColumn / 100].push(newNumber);
     this.allNumberBlocks[randomColumn / 100].push(newNumber);
-    console.log(blocksPerColumn);
   }
 
   incrementBlocksPerColumn(columnNumber) {
@@ -149,7 +148,6 @@ class Game {
         filteredPositions.push(horPositions[idx]);
       }
     });
-    // return horPositions[Math.floor(Math.random() * 10)];
     return filteredPositions[Math.floor(Math.random() * 10) % filteredPositions.length];
   }
 
@@ -163,9 +161,6 @@ class Game {
 
       if (column[0]) column[0].move();
       column.slice(1).forEach((number, jdx) => {
-        // if (!number.checkCollision(this.staticNumberBlocks[idx].slice(-1)[0])) {
-        //   number.move();
-        // }
         if (!number.checkCollision(this.fallingNumberBlocks[idx][jdx])) {
           number.move();
         }
@@ -181,11 +176,11 @@ class Game {
     });
   }
 
-  handleClick(ctx) {
+  handleClick(e, ctx) {
     this.allNumberBlocks.forEach((columns) => {
       columns.forEach((number) => {
-        if (number.isClicked(event.screenX, event.screenY)) {
-          console.log(number.number);
+        if (number.isClicked(e.pageX, e.pageY)) {
+          number.toggleSelected();
         }
       });
     });
@@ -327,8 +322,7 @@ class Number {
   isClicked(mouseX, mouseY) {
     const pos = this.pos;
     const verticalMatch = mouseY >= pos[1] && mouseY < pos[1] + 100;
-    const horizontalMatch = mouseX >= pos[0] && mouseY < pos[0] + 100;
-    debugger
+    const horizontalMatch = mouseX >= pos[0] && mouseX < pos[0] + 100;
     return verticalMatch && horizontalMatch;
   }
 }
