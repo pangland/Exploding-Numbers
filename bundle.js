@@ -70,7 +70,7 @@
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__game_view_js__);
 // const Game = require("./game");
 // const GameView = require("./game_view");
@@ -100,26 +100,36 @@ document.addEventListener("DOMContentLoaded", () => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__equations_js__ = __webpack_require__(3);
+
 
 
 const horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 const blocksPerColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const selectedNumbers = [];
 
 class Game {
   constructor() {
     this.allNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
     this.fallingNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
     this.staticNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
+
+
+    this.selectedNumbers = [];
+    this.equations = new __WEBPACK_IMPORTED_MODULE_1__equations_js__["a" /* default */]();
   }
 
   fillBottomRow() {
     const vertPosition = 450;
     horPositions.forEach((pos, idx) => {
-      this.allNumberBlocks[idx].push(new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([pos, vertPosition]));
-      this.staticNumberBlocks[idx].push(new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([pos, vertPosition]));
+      const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([pos, vertPosition]);
+      this.allNumberBlocks[idx].push(newNumber);
+      this.staticNumberBlocks[idx].push(newNumber);
       this.incrementBlocksPerColumn(idx);
     });
+
+    this.newEquation();
   }
 
   createNumber() {
@@ -170,20 +180,118 @@ class Game {
 
   draw(ctx) {
     ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 1000, 500);
+    ctx.fillRect(0, 0, 1000, 550);
     this.allNumberBlocks.forEach((numberColumn) => {
       numberColumn.forEach((number) => number.draw(ctx));
     });
+    this.equations.draw(ctx);
   }
 
   handleClick(e, ctx) {
     this.allNumberBlocks.forEach((columns) => {
       columns.forEach((number) => {
         if (number.isClicked(e.pageX, e.pageY)) {
-          number.toggleSelected();
+          debugger
+          this.handleNumber(number);
+          this.correctMatch();
+          this.draw(ctx);
         }
       });
     });
+  }
+
+  // Number {pos: Array(2), vel: 0.8010193312934939, color: "blue", selected: false, number: 9}
+  // Number {pos: Array(2), vel: 0.8010193312934939, color: "blue", selected: true, number: 9}
+  // Number {pos: Array(2), vel: 0.8010193312934939, color: "blue", selected: true, number: 9}
+
+
+  handleNumber(number) {
+    number.toggleColor();
+    const indexOfNumber = this.selectedNumbers.indexOf(number);
+
+    if (indexOfNumber === -1) {
+      this.selectedNumbers.push(number);
+    } else {
+      this.selectedNumbers.splice(indexOfNumber, 1);
+    }
+  }
+
+  correctMatch() {
+    debugger
+    let numberProperty = this.selectedNumbers.map((number) => {
+      return number.number;
+    })
+
+    if (numberProperty.join('') === this.equationSolution.join('')) {
+      this.removeNumbers();
+    }
+  }
+
+  removeNumbers() {
+    this.staticNumberBlocks.forEach((column, idx) => {
+      let i = 0;
+      while (i < column.length) {
+        let selectedCount = this.selectedNumbers.length;
+        this.selectedNumbers.forEach((number, jdx) => {
+          debugger
+          if (this.staticNumberBlocks[idx].indexOf(number) !== -1) {
+            debugger
+            this.selectedNumbers.splice(jdx, 1);
+            this.handleStaticDeletion(idx, jdx);
+          }
+        });
+        if (selectedCount === this.selectedNumbers.length) {
+          i++;
+        }
+      }
+    });
+
+
+    if (this.selectedNumbers.length > 0) {
+      this.fallingNumberBlocks.forEach((column, idx) => {
+        let i = 0;
+        while (i < column.length) {
+          let selectedCount = this.selectedNumbers.length;
+          this.selectedNumbers.forEach((number, jdx) => {
+            if (column.indexOf(number) !== -1) {
+              this.selectedNumbers.splice(jdx, 1);
+              this.handleFallingDeletion(idx, jdx);
+            }
+          });
+          if (selectedCount === this.selectedNumbers.length) {
+            i++;
+          }
+        }
+      });
+    }
+  }
+
+  handleStaticDeletion(outerIndex, innerIndex) {
+    this.staticNumberBlocks[outerIndex].splice(innerIndex, 1);
+    this.allNumberBlocks[outerIndex].splice(innerIndex, 1);
+  }
+
+  handleFallingDeletion(outerIndex, innerIndex) {
+    this.fallingNumberBlocks[outerIndex].splice(innerIndex, 1);
+
+    const staticsInRow = this.staticNumberBlocks[outerIndex].length;
+
+    this.allNumberBlocks[outerIndex].splice(innerIndex + staticsInRow, 1);
+  }
+
+  newEquation() {
+    debugger
+    let allNumbers = [].concat.apply([], this.allNumberBlocks);
+    allNumbers = allNumbers.sort(() => Math.random());
+    const numbersToGrab = Math.floor(Math.random() * allNumbers.length % 3) + 1;
+
+    let equationSolution = allNumbers.slice(0, numbersToGrab);
+    equationSolution = equationSolution.map((number) => {
+      return number.number;
+    });
+
+    this.equationSolution = equationSolution;
+    this.equations.generateNewEquation(equationSolution);
   }
 }
 
@@ -236,41 +344,6 @@ class Game {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-class GameView {
-  constructor(game, ctx) {
-    this.game = game;
-    this.ctx = ctx;
-  }
-
-  start() {
-    this.game.fillBottomRow();
-    this.game.draw(this.ctx);
-
-    setInterval(() => {
-      this.game.move();
-      this.game.createNumber();
-      this.game.draw(this.ctx);
-    }, 2000);
-
-    setInterval(() => {
-      this.game.move();
-      this.game.draw(this.ctx);
-    }, 10)
-    // setInterval(() => {
-    //   this.game.createNumber();
-    //   this.game.draw(this.ctx);
-    // }, 2000);
-  }
-}
-
-module.exports = GameView;
-// export default GameView;
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -285,6 +358,7 @@ class Number {
     this.pos = pos;
     this.vel = this.randomVec(5);
     this.color = this.randomColor();
+    this.selected = false;
 
     this.number = Math.floor(Math.random() * 10);
   }
@@ -292,7 +366,7 @@ class Number {
   draw(ctx) {
     // ctx.fillStyle = "black";
     // ctx.fillRect(this.pos[0], this.pos[1] - this.vel * 10, 100, 100);
-    ctx.fillStyle = this.color;
+    ctx.fillStyle = this.selected ? "gray" : this.color;
     ctx.font = '18pt Arial';
     ctx.fillRect(this.pos[0], this.pos[1], 100, 100);
     ctx.fillStyle = "black";
@@ -324,6 +398,10 @@ class Number {
     const verticalMatch = mouseY >= pos[1] && mouseY < pos[1] + 100;
     const horizontalMatch = mouseX >= pos[0] && mouseX < pos[0] + 100;
     return verticalMatch && horizontalMatch;
+  }
+
+  toggleColor() {
+    this.selected = this.selected ? false : true;
   }
 }
 
@@ -364,6 +442,132 @@ class Number {
 // };
 //
 // module.exports = Asteroid;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Equations {
+  constructor() {
+    this.equationCount = 0;
+    this.operations = ['+', '-', '*', '%'];
+    this.equation = "";
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = "white";
+    ctx.fillText(this.equation, 450, 25);
+  }
+
+  generateNewEquation(numberArray) {
+    this.equationCount++;
+    let solution;
+
+    if (numberArray.length > 1) {
+      solution = parseInt(numberArray.join(''));
+    } else {
+      solution = numberArray[0];
+    }
+
+    debugger
+    const operation = this.operations[Math.floor(Math.random() * 4)];
+    switch (operation) {
+      case '+':
+        this.add(solution);
+        break;
+      case '-':
+        this.subtract(solution);
+        break;
+      case '*':
+        this.multiply(solution);
+        break;
+      case '%':
+        this.divide(solution);
+        break;
+    }
+  }
+
+  add(solution) {
+    debugger
+    const firstValue = Math.floor(Math.random() * solution);
+    const secondValue = solution - firstValue;
+    this.equation = `${firstValue} + ${secondValue}`;
+  }
+
+  subtract(solution) {
+    debugger
+    const firstValue = Math.floor(Math.random() * 10 * this.equationCount + solution);
+    const secondValue = firstValue - solution;
+    this.equation = `${firstValue} - ${secondValue}`;
+  }
+
+  multiply(solution) {
+    debugger
+    const factors = [];
+    for (let i = 1; i <= solution / 2; i++) {
+      if (solution % i === 0) {
+        factors.push(i);
+      }
+    }
+
+    if (solution === 0) {
+      const firstValue = factors[Math.floor(Math.random() * 10 * this.equaitonCount)];
+      const secondValue = 0;
+      this.equation = `${firstValue} * ${secondValue}`;
+    } else {
+      const firstValue = factors[Math.floor(Math.random() * factors.length)];
+      const secondValue = solution / firstValue;
+      this.equation = `${firstValue} * ${secondValue}`;
+    }
+  }
+
+  divide(solution) {
+    debugger
+    const firstValue = solution * Math
+      .floor(Math.random() * 10 * this.equationCount + 1);
+    const secondValue = firstValue / solution;
+    this.equation = `${firstValue} % ${secondValue}`;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Equations);
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+class GameView {
+  constructor(game, ctx) {
+    this.game = game;
+    this.ctx = ctx;
+  }
+
+  start() {
+    this.game.fillBottomRow();
+    this.game.draw(this.ctx);
+
+    setInterval(() => {
+      this.game.move();
+      this.game.createNumber();
+      this.game.draw(this.ctx);
+    }, 2000);
+
+    setInterval(() => {
+      this.game.move();
+      this.game.draw(this.ctx);
+    }, 10)
+    // setInterval(() => {
+    //   this.game.createNumber();
+    //   this.game.draw(this.ctx);
+    // }, 2000);
+  }
+}
+
+module.exports = GameView;
+// export default GameView;
 
 
 /***/ })
