@@ -120,6 +120,24 @@ class Game {
     this.equations = new __WEBPACK_IMPORTED_MODULE_1__equations_js__["a" /* default */]();
   }
 
+  won() {
+    this.staticNumberBlocks.forEach((column) => {
+      if (column.length !== 0) {
+        return false;
+      }
+    });
+    return true;
+  }
+
+  over() {
+    blocksPerColumn.forEach((count) => {
+      if (count < 5) {
+        return false;
+      }
+    });
+    return true;
+  }
+
   fillBottomRow() {
     const vertPosition = 450;
     horPositions.forEach((pos, idx) => {
@@ -136,7 +154,6 @@ class Game {
     const randomColumn = this.randomStartingPos();
     this.incrementBlocksPerColumn(Math.round(randomColumn / 100));
     const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([randomColumn, 50]);
-    // debugger
     this.fallingNumberBlocks[randomColumn / 100].push(newNumber);
     this.allNumberBlocks[randomColumn / 100].push(newNumber);
   }
@@ -191,7 +208,6 @@ class Game {
     this.allNumberBlocks.forEach((columns) => {
       columns.forEach((number) => {
         if (number.isClicked(e.pageX, e.pageY)) {
-          debugger
           this.handleNumber(number);
           this.correctMatch();
           this.draw(ctx);
@@ -217,13 +233,13 @@ class Game {
   }
 
   correctMatch() {
-    debugger
     let numberProperty = this.selectedNumbers.map((number) => {
       return number.number;
     })
 
     if (numberProperty.join('') === this.equationSolution.join('')) {
       this.removeNumbers();
+      this.newEquation();
     }
   }
 
@@ -233,11 +249,11 @@ class Game {
       while (i < column.length) {
         let selectedCount = this.selectedNumbers.length;
         this.selectedNumbers.forEach((number, jdx) => {
-          debugger
-          if (this.staticNumberBlocks[idx].indexOf(number) !== -1) {
-            debugger
+          const relevantIndex = this.staticNumberBlocks[idx].indexOf(number);
+          if (relevantIndex !== -1) {
             this.selectedNumbers.splice(jdx, 1);
-            this.handleStaticDeletion(idx, jdx);
+            this.handleStaticDeletion(idx, relevantIndex);
+            this.decrementBlocksPerColumn(idx);
           }
         });
         if (selectedCount === this.selectedNumbers.length) {
@@ -256,6 +272,7 @@ class Game {
             if (column.indexOf(number) !== -1) {
               this.selectedNumbers.splice(jdx, 1);
               this.handleFallingDeletion(idx, jdx);
+              this.decrementBlocksPerColumn(idx);
             }
           });
           if (selectedCount === this.selectedNumbers.length) {
@@ -264,11 +281,16 @@ class Game {
         }
       });
     }
+    this.selectedNumbers = [];
   }
 
   handleStaticDeletion(outerIndex, innerIndex) {
     this.staticNumberBlocks[outerIndex].splice(innerIndex, 1);
     this.allNumberBlocks[outerIndex].splice(innerIndex, 1);
+
+    for (let i = innerIndex; i < this.staticNumberBlocks[outerIndex].length; i++) {
+      this.staticNumberBlocks[outerIndex][i].downshift();
+    }
   }
 
   handleFallingDeletion(outerIndex, innerIndex) {
@@ -280,7 +302,6 @@ class Game {
   }
 
   newEquation() {
-    debugger
     let allNumbers = [].concat.apply([], this.allNumberBlocks);
     allNumbers = allNumbers.sort(() => Math.random());
     const numbersToGrab = Math.floor(Math.random() * allNumbers.length % 3) + 1;
@@ -356,7 +377,7 @@ const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 class Number {
   constructor(pos) {
     this.pos = pos;
-    this.vel = this.randomVec(5);
+    this.vel = this.randomVel();
     this.color = this.randomColor();
     this.selected = false;
 
@@ -377,8 +398,11 @@ class Number {
     this.pos[1] = this.pos[1] + this.vel;
   }
 
-  randomVec(length) {
-    return Math.random();
+  randomVel() {
+    let randomBase = Math.random();
+    randomBase = randomBase < .1 ? .1 : randomBase;
+
+    return randomBase / 2;
   }
 
   randomColor() {
@@ -386,7 +410,11 @@ class Number {
   }
 
   checkCollision(otherNum) {
-    return this.pos[1] + this.vel + 100 > otherNum.pos[1];
+    if (typeof otherNum === "undefined") {
+      return this.pos[1] + this.vel + 100 > 550
+    } else {
+      return this.pos[1] + this.vel + 100 > otherNum.pos[1];
+    }
   }
 
   syncPosition(height) {
@@ -398,6 +426,10 @@ class Number {
     const verticalMatch = mouseY >= pos[1] && mouseY < pos[1] + 100;
     const horizontalMatch = mouseX >= pos[0] && mouseX < pos[0] + 100;
     return verticalMatch && horizontalMatch;
+  }
+
+  downshift() {
+    this.pos[1] = this.pos[1] + 100;
   }
 
   toggleColor() {
@@ -471,7 +503,6 @@ class Equations {
       solution = numberArray[0];
     }
 
-    debugger
     const operation = this.operations[Math.floor(Math.random() * 4)];
     switch (operation) {
       case '+':
@@ -490,21 +521,18 @@ class Equations {
   }
 
   add(solution) {
-    debugger
     const firstValue = Math.floor(Math.random() * solution);
     const secondValue = solution - firstValue;
     this.equation = `${firstValue} + ${secondValue}`;
   }
 
   subtract(solution) {
-    debugger
     const firstValue = Math.floor(Math.random() * 10 * this.equationCount + solution);
     const secondValue = firstValue - solution;
     this.equation = `${firstValue} - ${secondValue}`;
   }
 
   multiply(solution) {
-    debugger
     const factors = [];
     for (let i = 1; i <= solution / 2; i++) {
       if (solution % i === 0) {
@@ -513,7 +541,7 @@ class Equations {
     }
 
     if (solution === 0) {
-      const firstValue = factors[Math.floor(Math.random() * 10 * this.equaitonCount)];
+      const firstValue = factors[Math.floor(Math.random() * 10 * this.equationCount)];
       const secondValue = 0;
       this.equation = `${firstValue} * ${secondValue}`;
     } else {
@@ -524,9 +552,8 @@ class Equations {
   }
 
   divide(solution) {
-    debugger
-    const firstValue = solution * Math
-      .floor(Math.random() * 10 * this.equationCount + 1);
+    const firstValue = solution * (Math
+      .floor(Math.random() * 10 * this.equationCount + 1));
     const secondValue = firstValue / solution;
     this.equation = `${firstValue} % ${secondValue}`;
   }
@@ -549,20 +576,24 @@ class GameView {
     this.game.fillBottomRow();
     this.game.draw(this.ctx);
 
-    setInterval(() => {
+    const gameInterval = setInterval(() => {
       this.game.move();
       this.game.createNumber();
       this.game.draw(this.ctx);
-    }, 2000);
+    }, 4000);
 
-    setInterval(() => {
-      this.game.move();
-      this.game.draw(this.ctx);
-    }, 10)
     // setInterval(() => {
     //   this.game.createNumber();
     //   this.game.draw(this.ctx);
     // }, 2000);
+    setInterval(() => {
+      this.game.move();
+      this.game.draw(this.ctx);
+      // if (this.game.won() || this.game.over()) {
+      //   debugger
+      //   clearInterval(gameInterval);
+      // }
+    }, 10);
   }
 }
 
