@@ -92,6 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("click", (e) => {
     game.handleClick(e, ctx);
   });
+
+  // canvas.addEventListener("onMouseDown", (e) => {
+  //   game.handleHoldDown(e,)
+  // });
 });
 
 
@@ -121,21 +125,27 @@ class Game {
   }
 
   won() {
-    this.staticNumberBlocks.forEach((column) => {
-      if (column.length !== 0) {
-        return false;
+    let truthiness = true;
+    for (let i = 0; i < this.staticNumberBlocks.length; i++) {
+      if (!truthiness) break;
+      if (this.staticNumberBlocks[i].length !== 0) {
+        truthiness = false;
       }
-    });
-    return true;
+    }
+
+    return truthiness;
   }
 
   over() {
-    blocksPerColumn.forEach((count) => {
-      if (count < 5) {
-        return false;
+    let truthiness = true;
+    for (let i = 0; i < blocksPerColumn.length; i++) {
+      if (!truthiness) break;
+      if (blocksPerColumn[i] < 5) {
+        truthiness = false;
       }
-    });
-    return true;
+    }
+
+    return truthiness;
   }
 
   fillBottomRow() {
@@ -211,7 +221,6 @@ class Game {
   handleClick(e, ctx) {
     this.allNumberBlocks.forEach((columns) => {
       columns.forEach((number) => {
-        debugger
         if (number.isClicked(e.offsetX, e.offsetY)) {
           this.handleNumber(number);
           this.correctMatch();
@@ -242,7 +251,8 @@ class Game {
     // debugger
     let numberProperty = this.selectedNumbers.map((number) => {
       return number.number;
-    })
+    });
+
 
     if (numberProperty.join('') === this.equationSolution.join('')) {
       this.removeNumbers();
@@ -276,9 +286,10 @@ class Game {
         while (i < column.length) {
           let selectedCount = this.selectedNumbers.length;
           this.selectedNumbers.forEach((number, jdx) => {
-            if (column.indexOf(number) !== -1) {
+            const relevantIndex = this.fallingNumberBlocks[idx].indexOf(number);
+            if (relevantIndex !== -1) {
               this.selectedNumbers.splice(jdx, 1);
-              this.handleFallingDeletion(idx, jdx);
+              this.handleFallingDeletion(idx, relevantIndex);
               this.decrementBlocksPerColumn(idx);
             }
           });
@@ -560,7 +571,8 @@ class Equations {
 
   multiply(solution) {
     const factors = [];
-    for (let i = 1; i <= solution / 2; i++) {
+    if (solution > 0) factors.push(1);
+    for (let i = 2; i <= solution / 2; i++) {
       if (solution % i === 0) {
         factors.push(i);
       }
@@ -575,12 +587,13 @@ class Equations {
       const secondValue = solution / firstValue;
       this.equation = `${firstValue} * ${secondValue}`;
     }
+    debugger
   }
 
   divide(solution) {
     const firstValue = solution * (Math
-      .floor(Math.random() * 3 * this.equationCount + 1));
-    const secondValue = firstValue / solution;
+      .floor(Math.random() * this.equationCount + 1));
+    const secondValue = firstValue === 0 ? 1 : firstValue / solution;
     this.equation = `${firstValue} / ${secondValue}`;
   }
 }
@@ -615,10 +628,10 @@ class GameView {
     setInterval(() => {
       this.game.move();
       this.game.draw(this.ctx);
-      // if (this.game.won() || this.game.over()) {
-      //   debugger
-      //   clearInterval(gameInterval);
-      // }
+      if (this.game.won() || this.game.over()) {
+        debugger
+        clearInterval(gameInterval);
+      }
     }, 10);
   }
 }
