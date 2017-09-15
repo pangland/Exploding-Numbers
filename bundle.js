@@ -87,10 +87,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const game = new __WEBPACK_IMPORTED_MODULE_0__game_js__["a" /* default */]();
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 550);
-  new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start();
 
-  canvas.addEventListener("click", (e) => {
-    game.handleClick(e, ctx);
+  function handleClick() {
+    game.handleClick(event, ctx);
+  }
+
+  // canvas.addEventListener("click", (e) => {
+  //   game.handleClick(e, ctx);
+  // });
+
+  canvas.addEventListener("click", handleClick);
+
+  new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start(() => {
+    // canvas.removeEventListener();
+    // const won = game.won();
+    // won ? console.log('whoopio kaya badoobaaa') : console.log("whoops");
+    ctx.font = '50pt Arial';
+    ctx.color = 'white';
+    if (game.won()) {
+      ctx.fillText('YOU SAVED MATH!', 50, 150);
+    } else {
+      ctx.fillText('Your math is worse than my coding', 100, 150);
+    }
+
+    // canvas.parentNode.replaceChild(canClone, canvas);
+
+    // clone = canvas.cloneNode(true);
+    // canvas.parentNode.replaceChild(clone, canvas);
+    canvas.removeEventListener('click', handleClick);
   });
 
   // canvas.addEventListener("onMouseDown", (e) => {
@@ -211,7 +235,7 @@ class Game {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, 1000, 550);
     ctx.fillStyle = "white";
-    ctx.fillText(numbers.join(' '), 750, 25);
+    ctx.fillText("Answer: " + numbers.join(''), 400, 45);
     this.allNumberBlocks.forEach((numberColumn) => {
       numberColumn.forEach((number) => number.draw(ctx));
     });
@@ -322,6 +346,7 @@ class Game {
   newEquation() {
     let allNumbers = [].concat.apply([], this.allNumberBlocks);
     allNumbers = allNumbers.sort(() => Math.random());
+    console.log(allNumbers);
     const numbersToGrab = Math.floor(Math.random() * allNumbers.length % 3) + 1;
 
     let equationSolution = allNumbers.slice(0, numbersToGrab);
@@ -336,6 +361,8 @@ class Game {
 
     this.equations.generateNewEquation(equationSolution);
   }
+
+
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Game);
@@ -410,7 +437,7 @@ class Number {
     // ctx.fillStyle = "black";
     // ctx.fillRect(this.pos[0], this.pos[1] - this.vel * 10, 100, 100);
     ctx.fillStyle = this.selected ? "gray" : this.color;
-    ctx.font = '18pt Arial';
+    ctx.font = '17pt Arial';
 
     // ctx.fillRect(this.pos[0], this.pos[1], 100, 100);
     // ctx.fillStyle = "black";
@@ -527,7 +554,7 @@ class Equations {
 
   draw(ctx) {
     ctx.fillStyle = "white";
-    ctx.fillText(this.equation, 450, 25);
+    ctx.fillText('Expression: ' + this.equation, 400, 20);
   }
 
   generateNewEquation(numberArray) {
@@ -611,7 +638,7 @@ class GameView {
     this.ctx = ctx;
   }
 
-  start() {
+  start(callback) {
     this.game.fillBottomRow();
     this.game.draw(this.ctx);
 
@@ -625,12 +652,14 @@ class GameView {
     //   this.game.createNumber();
     //   this.game.draw(this.ctx);
     // }, 2000);
-    setInterval(() => {
+    const moveInterval = setInterval(() => {
       this.game.move();
       this.game.draw(this.ctx);
       if (this.game.won() || this.game.over()) {
         debugger
         clearInterval(gameInterval);
+        clearInterval(moveInterval);
+        callback();
       }
     }, 10);
   }
