@@ -196,8 +196,12 @@ class Game {
   }
 
   draw(ctx) {
+    const numbers = this.selectedNumbers.map((num) => num.number);
+
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, 1000, 550);
+    ctx.fillStyle = "white";
+    ctx.fillText(numbers.join(' '), 750, 25);
     this.allNumberBlocks.forEach((numberColumn) => {
       numberColumn.forEach((number) => number.draw(ctx));
     });
@@ -224,6 +228,7 @@ class Game {
   handleNumber(number) {
     number.toggleColor();
     const indexOfNumber = this.selectedNumbers.indexOf(number);
+    // debugger
 
     if (indexOfNumber === -1) {
       this.selectedNumbers.push(number);
@@ -233,6 +238,7 @@ class Game {
   }
 
   correctMatch() {
+    // debugger
     let numberProperty = this.selectedNumbers.map((number) => {
       return number.number;
     })
@@ -311,7 +317,11 @@ class Game {
       return number.number;
     });
 
+    while (equationSolution[0] === 0 && equationSolution.length > 1) {
+      equationSolution = equationSolution.slice(1);
+    }
     this.equationSolution = equationSolution;
+
     this.equations.generateNewEquation(equationSolution);
   }
 }
@@ -484,7 +494,7 @@ class Number {
 class Equations {
   constructor() {
     this.equationCount = 0;
-    this.operations = ['+', '-', '*', '%'];
+    this.operations = ['+', '-', '*', '/'];
     this.equation = "";
   }
 
@@ -514,7 +524,7 @@ class Equations {
       case '*':
         this.multiply(solution);
         break;
-      case '%':
+      case '/':
         this.divide(solution);
         break;
     }
@@ -527,7 +537,7 @@ class Equations {
   }
 
   subtract(solution) {
-    const firstValue = Math.floor(Math.random() * 10 * this.equationCount + solution);
+    const firstValue = Math.floor(Math.random() * 5 * this.equationCount + solution);
     const secondValue = firstValue - solution;
     this.equation = `${firstValue} - ${secondValue}`;
   }
@@ -541,7 +551,7 @@ class Equations {
     }
 
     if (solution === 0) {
-      const firstValue = factors[Math.floor(Math.random() * 10 * this.equationCount)];
+      const firstValue = factors[Math.floor(Math.random() * 3 * this.equationCount)];
       const secondValue = 0;
       this.equation = `${firstValue} * ${secondValue}`;
     } else {
@@ -553,9 +563,9 @@ class Equations {
 
   divide(solution) {
     const firstValue = solution * (Math
-      .floor(Math.random() * 10 * this.equationCount + 1));
+      .floor(Math.random() * 3 * this.equationCount + 1));
     const secondValue = firstValue / solution;
-    this.equation = `${firstValue} % ${secondValue}`;
+    this.equation = `${firstValue} / ${secondValue}`;
   }
 }
 
