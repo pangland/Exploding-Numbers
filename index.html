@@ -1,14 +1,22 @@
 <html>
   <head>
+    <link rel="stylesheet" href="./assets/stylesheet.css" type="text/css"/>
     <title>Exploding Numbers</title>
   </head>
 
   <body>
-    <text>Select the numbers that solve the equation. If you pick the wrong number, just deselect it! Clear the bottom row to win.
-      Note: current rendition of game gets random breaks. Also there are no prompts for when you lose yet, and no winning condition
-      is registered.
-    </text>
-    <canvas id='game-canvas'></canvas>
+    <div class="MORE-FLEX">
+      <span>Select the numbers that solve the equation. If you pick the
+        wrong number, just deselect it! Clear the bottom row to win.</span>
+
+      <span>If you select a number you don't want, just click it again to
+        deselect it. </span>
+
+      <span>The problems get harder the longer you take. It's best to finish
+        quickly.</span>
+    </div>
+
+    <canvas id='game-canvas'height='550px' width='1000px'></canvas>
     <!-- <script src="lib/exploding_numbers.js"></script> -->
     <script type="application/javascript" src="bundle.js"></script>
     <!-- <script type="text/javascript">

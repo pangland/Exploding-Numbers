@@ -1,0 +1,19 @@
+canvas {
+  display: flex;
+  justify-content: center;
+  /*margin-left: auto;
+  margin-right: auto;*/
+  margin: 0 auto;
+}
+
+.MORE-FLEX {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+span {
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-size: 24px;
+}

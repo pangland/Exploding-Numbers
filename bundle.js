@@ -77,7 +77,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-document.write("It breathes");
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("game-canvas");
   canvas.width = 1000;
