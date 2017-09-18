@@ -83,38 +83,81 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.height = 550;
 
   const ctx = canvas.getContext("2d");
-  const game = new __WEBPACK_IMPORTED_MODULE_0__game_js__["a" /* default */]();
+  // const game = new Game();
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 550);
+  ctx.fillStyle = "white";
+  ctx.font = "50pt Arial";
+  ctx.fillText("Click anywhere to start, loser", 70, 100);
+  // ctx.
 
-  function handleClick() {
-    game.handleClick(event, ctx);
+  function handleStartAndEnd() {
+    startGame();
   }
+
+  // function handleClick() {
+  //   game.handleClick(event, ctx);
+  // }
 
   // canvas.addEventListener("click", (e) => {
   //   game.handleClick(e, ctx);
   // });
 
-  canvas.addEventListener("click", handleClick);
+  canvas.addEventListener("click", handleStartAndEnd);
 
-  new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start(() => {
-    // canvas.removeEventListener();
-    // const won = game.won();
-    // won ? console.log('whoopio kaya badoobaaa') : console.log("whoops");
-    ctx.font = '50pt Arial';
-    ctx.color = 'white';
-    if (game.won()) {
-      ctx.fillText('YOU SAVED MATH!', 50, 150);
-    } else {
-      ctx.fillText('Your math is worse than my coding', 100, 150);
+  function startGame() {
+    const game = new __WEBPACK_IMPORTED_MODULE_0__game_js__["a" /* default */]();
+    function handleClick() {
+      game.handleClick(event, ctx);
     }
 
-    // canvas.parentNode.replaceChild(canClone, canvas);
+    canvas.removeEventListener('click', handleStartAndEnd);
+    canvas.addEventListener("click", handleClick);
 
-    // clone = canvas.cloneNode(true);
-    // canvas.parentNode.replaceChild(clone, canvas);
-    canvas.removeEventListener('click', handleClick);
-  });
+    new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start(() => {
+      ctx.color = 'white';
+
+      ctx.fillStyle = "black";
+      ctx.fillRect(400, 0, 600, 50);
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "black";
+      ctx.font = '17pt arial';
+
+      if (game.won()) {
+        ctx.fillText("Expression: Who's awesome?", 400, 20);
+        ctx.fillText("Answer: You're awesome!", 400, 45);
+        ctx.font = '50pt Arial';
+        ctx.fillText('YOU SAVED MATH!', 170, 150);
+        ctx.strokeText('YOU SAVED MATH!', 170, 150);
+      } else {
+        ctx.fillText('Expression: Did you just fail?', 400, 20);
+        ctx.fillText("Answer: You did.", 400, 45);
+        ctx.font = '50pt Arial';
+        ctx.fillText('Your math needs work', 150, 150);
+        ctx.strokeText('Your math needs work', 150, 150);
+      }
+      // ctx.stroke();
+      ctx.fillText('Click anywhere to play again!', 50, 225);
+      ctx.strokeText('Click anywhere to play again!', 50, 225);
+
+      canvas.removeEventListener('click', handleClick);
+      canvas.addEventListener("click", handleStartAndEnd)
+    });
+  }
+
+
+  // canvas.addEventListener("click", handleClick);
+  //
+  // new GameView(game, ctx).start(() => {
+  //   ctx.font = '50pt Arial';
+  //   ctx.color = 'white';
+  //   if (game.won()) {
+  //     ctx.fillText('YOU SAVED MATH!', 50, 150);
+  //   } else {
+  //     ctx.fillText('Your math is worse than my coding', 100, 150);
+  //   }
+  //   canvas.removeEventListener('click', handleClick);
+  // });
 
   // canvas.addEventListener("onMouseDown", (e) => {
   //   game.handleHoldDown(e,)
@@ -132,9 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-const horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-const blocksPerColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-const selectedNumbers = [];
+// const horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+// const blocksPerColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// const selectedNumbers = [];
 
 class Game {
   constructor() {
@@ -142,6 +185,9 @@ class Game {
     this.fallingNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
     this.staticNumberBlocks = [[], [], [], [], [], [], [], [], [], []];
 
+    this.horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+    this.blocksPerColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.selectedNumbers = [];
 
     this.selectedNumbers = [];
     this.equations = new __WEBPACK_IMPORTED_MODULE_1__equations_js__["a" /* default */]();
@@ -161,9 +207,9 @@ class Game {
 
   over() {
     let truthiness = true;
-    for (let i = 0; i < blocksPerColumn.length; i++) {
+    for (let i = 0; i < this.blocksPerColumn.length; i++) {
       if (!truthiness) break;
-      if (blocksPerColumn[i] < 5) {
+      if (this.blocksPerColumn[i] < 5) {
         truthiness = false;
       }
     }
@@ -173,7 +219,7 @@ class Game {
 
   fillBottomRow() {
     const vertPosition = 450;
-    horPositions.forEach((pos, idx) => {
+    this.horPositions.forEach((pos, idx) => {
       const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([pos, vertPosition]);
       this.allNumberBlocks[idx].push(newNumber);
       this.staticNumberBlocks[idx].push(newNumber);
@@ -192,20 +238,20 @@ class Game {
   }
 
   incrementBlocksPerColumn(columnNumber) {
-    blocksPerColumn[columnNumber] = blocksPerColumn[columnNumber] + 1;
+    this.blocksPerColumn[columnNumber] = this.blocksPerColumn[columnNumber] + 1;
   }
 
   decrementBlocksPerColumn(columnNumber) {
-    blocksPerColumn[columnNumber] -= 1;
+    this.blocksPerColumn[columnNumber] -= 1;
   }
 
   randomStartingPos() {
     const filteredPositions = [];
-    horPositions.forEach((column, idx) => {
-      if (!this.fallingNumberBlocks[idx][0] && blocksPerColumn[idx] < 5) {
-        filteredPositions.push(horPositions[idx]);
-      } else if (blocksPerColumn[idx] < 5 && this.fallingNumberBlocks[idx].slice(-1)[0].pos[1] >= 150) {
-        filteredPositions.push(horPositions[idx]);
+    this.horPositions.forEach((column, idx) => {
+      if (!this.fallingNumberBlocks[idx][0] && this.blocksPerColumn[idx] < 5) {
+        filteredPositions.push(this.horPositions[idx]);
+      } else if (this.blocksPerColumn[idx] < 5 && this.fallingNumberBlocks[idx].slice(-1)[0].pos[1] >= 150) {
+        filteredPositions.push(this.horPositions[idx]);
       }
     });
     return filteredPositions[Math.floor(Math.random() * 10) % filteredPositions.length];
@@ -231,10 +277,12 @@ class Game {
   draw(ctx) {
     const numbers = this.selectedNumbers.map((num) => num.number);
 
+    ctx.font = '17pt Arial';
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, 1000, 550);
     ctx.fillStyle = "white";
     ctx.fillText("Answer: " + numbers.join(''), 400, 45);
+
     this.allNumberBlocks.forEach((numberColumn) => {
       numberColumn.forEach((number) => number.draw(ctx));
     });
@@ -465,7 +513,7 @@ class Number {
     let randomBase = Math.random();
     randomBase = randomBase < .1 ? .1 : randomBase;
 
-    return randomBase / 2;
+    return randomBase * 100 / 2;
   }
 
   randomColor() {
@@ -613,7 +661,6 @@ class Equations {
       const secondValue = solution / firstValue;
       this.equation = `${firstValue} * ${secondValue}`;
     }
-    debugger
   }
 
   divide(solution) {
@@ -655,7 +702,6 @@ class GameView {
       this.game.move();
       this.game.draw(this.ctx);
       if (this.game.won() || this.game.over()) {
-        debugger
         clearInterval(gameInterval);
         clearInterval(moveInterval);
         callback();
