@@ -1,5 +1,6 @@
-# Sample JS Project Proposal: Exploding Numbers
+# Exploding Numbers
 --------------------
+[Live](https://pangland.github.io/Exploding-Numbers/)
 ## Background ##
 The game is as follows: numbered blocks fall to the bottom of the screen, stacking toward the top. A row of number blocks starts out on the bottom. If any column reaches the top of the screen the player loses. A mathematical expression is visible on screen, and the user must select blocks solving the expression. Speed of each block is random within some range, and the game ends either when the user runs out of space or when he clears out the bottom row.
 
