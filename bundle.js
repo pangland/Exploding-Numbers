@@ -283,7 +283,6 @@ class Game {
       return number.number;
     });
 
-
     if (numberProperty.join('') === this.equationSolution.join('')) {
       this.removeNumbers();
       this.newEquation();
@@ -308,7 +307,6 @@ class Game {
         }
       }
     });
-
 
     if (this.selectedNumbers.length > 0) {
       this.fallingNumberBlocks.forEach((column, idx) => {
