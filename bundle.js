@@ -71,7 +71,6 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__game_view_js__);
 
 
 
@@ -102,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.removeEventListener('click', handleStartAndEnd);
     canvas.addEventListener("click", handleClick);
 
-    new __WEBPACK_IMPORTED_MODULE_1__game_view_js___default.a(game, ctx).start(() => {
+    new __WEBPACK_IMPORTED_MODULE_1__game_view_js__["a" /* default */](game, ctx).start(() => {
       ctx.color = 'white';
 
       ctx.fillStyle = "black";
@@ -544,8 +543,9 @@ class Equations {
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class GameView {
   constructor(game, ctx) {
     this.game = game;
@@ -562,10 +562,6 @@ class GameView {
       this.game.draw(this.ctx);
     }, 4000);
 
-    // setInterval(() => {
-    //   this.game.createNumber();
-    //   this.game.draw(this.ctx);
-    // }, 2000);
     const moveInterval = setInterval(() => {
       this.game.move();
       this.game.draw(this.ctx);
@@ -578,8 +574,7 @@ class GameView {
   }
 }
 
-module.exports = GameView;
-// export default GameView;
+/* harmony default export */ __webpack_exports__["a"] = (GameView);
 
 
 /***/ })

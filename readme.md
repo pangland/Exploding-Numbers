@@ -21,7 +21,37 @@ handleNumber(number) {
 }
 ```
 
-If the selected numbers form the solution, a new expression is generated and the blocks are removed.
+If the selected numbers form the solution, the blocks are terminated and a new expression is generated:
+
+```javascript
+generateNewEquation(numberArray) {
+  this.equationCount++;
+  let solution;
+
+  if (numberArray.length > 1) {
+    solution = parseInt(numberArray.join(''));
+  } else {
+    solution = numberArray[0];
+  }
+
+  const operation = this.operations[Math.floor(Math.random() * 4)];
+  switch (operation) {
+    case '+':
+      this.add(solution);
+      break;
+    case '-':
+      this.subtract(solution);
+      break;
+    case '*':
+      this.multiply(solution);
+      break;
+    case '/':
+      this.divide(solution);
+      break;
+  }
+}
+```
+With each new equation, `this.equationCount` is incremented. The division and subtraction methods can generate harder equations as `this.equationCount` gets larger. Addition and multiplication get harder because the likelihood of selecting a large number to solve for increases with the equation count.
 
 ## To Do ##
 
