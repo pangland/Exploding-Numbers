@@ -377,7 +377,7 @@ class Game {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const colors = ["pink", "red", "blue", "lightblue", "teal", "silver", "yellow", "green"];
+const colors = ["pink", "red", "blue", "lightblue", "teal", "yellow", "green"];
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 class Number {
@@ -523,7 +523,7 @@ class Equations {
     }
 
     if (solution === 0) {
-      const firstValue = factors[Math.floor(Math.random() * 3 * this.equationCount)];
+      const firstValue = Math.floor(Math.random() * 3 * this.equationCount);
       const secondValue = 0;
       this.equation = `${firstValue} * ${secondValue}`;
     } else {
