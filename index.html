@@ -6,19 +6,26 @@
 
   <body>
     <div class="MORE-FLEX">
-      <span>Select the numbers that solve the equation. If you pick the
-        wrong number, just deselect it! Clear the bottom row to win.</span>
+      <h1>Exploding Numbers</h1>
 
-      <span>If you select a number you don't want, just click it again to
+      <span>Select digits to make the number that solves the equation. Clear the bottom row to win.</span>
+
+      <span>If you select a digit you don't want, just click it again to
         deselect it. </span>
 
       <span>The problems get harder the longer you take. It's best to finish
-        quickly.</span>
+        quickly. You lose when the screen fills up!</span>
     </div>
 
     <canvas id='game-canvas'height='550px' width='1000px'></canvas>
     <!-- <script src="lib/exploding_numbers.js"></script> -->
     <script type="application/javascript" src="bundle.js"></script>
+
+    <div class="message-class">
+      <span> This game is brought to you by Paul Angland.
+        <a href='https://github.com/pangland'> Github</a>
+      </span>
+    </div>
     <!-- <script type="text/javascript">
       const canvas = document.getElementsByTagName("canvas")[0];
       canvas.width = 1000;

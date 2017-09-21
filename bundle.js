@@ -72,8 +72,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__game_view_js__);
-// const Game = require("./game");
-// const GameView = require("./game_view");
 
 
 
@@ -83,25 +81,15 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.height = 550;
 
   const ctx = canvas.getContext("2d");
-  // const game = new Game();
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 550);
   ctx.fillStyle = "white";
   ctx.font = "50pt Arial";
-  ctx.fillText("Click anywhere to start, loser", 70, 100);
-  // ctx.
+  ctx.fillText("Click anywhere to start, player", 70, 100);
 
   function handleStartAndEnd() {
     startGame();
   }
-
-  // function handleClick() {
-  //   game.handleClick(event, ctx);
-  // }
-
-  // canvas.addEventListener("click", (e) => {
-  //   game.handleClick(e, ctx);
-  // });
 
   canvas.addEventListener("click", handleStartAndEnd);
 
@@ -136,32 +124,14 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillText('Your math needs work', 150, 150);
         ctx.strokeText('Your math needs work', 150, 150);
       }
-      // ctx.stroke();
+
       ctx.fillText('Click anywhere to play again!', 50, 225);
       ctx.strokeText('Click anywhere to play again!', 50, 225);
 
       canvas.removeEventListener('click', handleClick);
-      canvas.addEventListener("click", handleStartAndEnd)
+      canvas.addEventListener("click", handleStartAndEnd);
     });
   }
-
-
-  // canvas.addEventListener("click", handleClick);
-  //
-  // new GameView(game, ctx).start(() => {
-  //   ctx.font = '50pt Arial';
-  //   ctx.color = 'white';
-  //   if (game.won()) {
-  //     ctx.fillText('YOU SAVED MATH!', 50, 150);
-  //   } else {
-  //     ctx.fillText('Your math is worse than my coding', 100, 150);
-  //   }
-  //   canvas.removeEventListener('click', handleClick);
-  // });
-
-  // canvas.addEventListener("onMouseDown", (e) => {
-  //   game.handleHoldDown(e,)
-  // });
 });
 
 
@@ -174,10 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__equations_js__ = __webpack_require__(3);
 
 
-
-// const horPositions = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-// const blocksPerColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-// const selectedNumbers = [];
 
 class Game {
   constructor() {
@@ -301,15 +267,9 @@ class Game {
     });
   }
 
-  // Number {pos: Array(2), vel: 0.8010193312934939, color: "blue", selected: false, number: 9}
-  // Number {pos: Array(2), vel: 0.8010193312934939, color: "blue", selected: true, number: 9}
-  // Number {pos: Array(2), vel: 0.8010193312934939, color: "blue", selected: true, number: 9}
-
-
   handleNumber(number) {
     number.toggleColor();
     const indexOfNumber = this.selectedNumbers.indexOf(number);
-    // debugger
 
     if (indexOfNumber === -1) {
       this.selectedNumbers.push(number);
@@ -319,7 +279,6 @@ class Game {
   }
 
   correctMatch() {
-    // debugger
     let numberProperty = this.selectedNumbers.map((number) => {
       return number.number;
     });
@@ -408,55 +367,9 @@ class Game {
 
     this.equations.generateNewEquation(equationSolution);
   }
-
-
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Game);
-// module.exports = Game;
-
-// const Asteroid = require("./asteroid.js");
-// // const Bullet = require("./bullet.js");
-// // const Ship = require("./ship.js");
-//
-// function Game () {
-//   const DIM_X = 500;
-//   const DIM_Y = 500;
-//   const NUM_ASTEROIDS = 30;
-//
-//   this.asteroids = this.addAsteroids(NUM_ASTEROIDS, DIM_X, DIM_Y);
-// }
-//
-// Game.prototype.addAsteroids = function (count, dimX, dimY) {
-//   const asteroids = [];
-//
-//   for (let i = 0; i < count; i++) {
-//     asteroids.push(new Asteroid(this.randomPosition(dimX, dimY)));
-//   }
-//
-//   return asteroids;
-// };
-//
-// Game.prototype.randomPosition = function (dimX, dimY) {
-//   let randX = Math.random() * dimX;
-//   let randY = Math.random() * dimY;
-//   return [randX, randY];
-// };
-//
-// Game.prototype.draw = function (ctx) {
-//   ctx.clearRect(0,0,500,500);
-//   this.asteroids.forEach(function (el) {
-//     el.draw(ctx);
-//   });
-// };
-//
-// Game.prototype.move = function () {
-//   this.asteroids.forEach(function (el) {
-//     el.move();
-//   });
-// };
-//
-// module.exports = Game;
 
 
 /***/ }),
@@ -464,12 +377,9 @@ class Game {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// import MovingObject from './moving_object.js';
-
-const colors = ["pink", "red", "blue", "lightblue", "darkblue"];
+const colors = ["pink", "red", "blue", "lightblue", "teal", "silver", "yellow", "green"];
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-// 'extends MovingObject' for if we end up using it
 class Number {
   constructor(pos) {
     this.pos = pos;
@@ -481,13 +391,9 @@ class Number {
   }
 
   draw(ctx) {
-    // ctx.fillStyle = "black";
-    // ctx.fillRect(this.pos[0], this.pos[1] - this.vel * 10, 100, 100);
     ctx.fillStyle = this.selected ? "gray" : this.color;
     ctx.font = '17pt Arial';
 
-    // ctx.fillRect(this.pos[0], this.pos[1], 100, 100);
-    // ctx.fillStyle = "black";
     ctx.beginPath();
     ctx.moveTo(this.pos[0] + 10, this.pos[1]);
     ctx.lineTo(this.pos[0] + 90, this.pos[1]);
@@ -522,7 +428,7 @@ class Number {
 
   checkCollision(otherNum) {
     if (typeof otherNum === "undefined") {
-      return this.pos[1] + this.vel + 100 > 550
+      return this.pos[1] + this.vel + 100 > 550;
     } else {
       return this.pos[1] + this.vel + 100 > otherNum.pos[1];
     }
@@ -549,42 +455,6 @@ class Number {
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Number);
-// module.exports = Number;
-
-
-
-// Spacerock. It inherits from MovingObject.
-
-
-
-
-// const MovingObject = require("./moving_object.js");
-// const Util = require("./utils.js");
-//
-//
-//
-// Util.inherits(Asteroid, MovingObject);
-//
-// function Asteroid(pos) {
-//   const COLOR = "pink";
-//   const RADIUS = 4;
-//
-//   const astProperties = {
-//     pos: pos,
-//     vel: randomVec(5),
-//     color: COLOR,
-//     radius: RADIUS
-//   };
-//
-//   MovingObject.call(this, astProperties);
-// }
-//
-// const randomVec = function (length) {
-//   const deg = 2 * Math.PI * Math.random();
-//   return Util.scale([Math.sin(deg), Math.cos(deg)], length);
-// };
-//
-// module.exports = Asteroid;
 
 
 /***/ }),

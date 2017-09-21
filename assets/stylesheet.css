@@ -17,3 +17,13 @@ span {
   margin-top: 5px;
   font-size: 24px;
 }
+
+p {
+  margin: 0 auto;
+}
+
+.message-class {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
