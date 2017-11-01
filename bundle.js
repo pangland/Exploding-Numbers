@@ -553,18 +553,31 @@ class GameView {
   }
 
   start(callback) {
+    let timer = 4000;
+    let timeBetweenBlocks = 0;
     this.game.fillBottomRow();
     this.game.draw(this.ctx);
 
+    // const gameInterval = setInterval(() => {
+    //   this.game.move();
+    //   this.game.createNumber();
+    //   this.game.draw(this.ctx);
+    // }, 4000);
+
     const gameInterval = setInterval(() => {
-      this.game.move();
-      this.game.createNumber();
-      this.game.draw(this.ctx);
-    }, 4000);
+      if (timer <= timeBetweenBlocks) {
+        this.game.move();
+        this.game.createNumber();
+        this.game.draw(this.ctx);
+        const count = this.game.equations.equationCount;
+        timer = 2000 + 2000 * Math.pow(Math.E, -.05 * count);
+        timeBetweenBlocks = 0;
+      } else {
+        timeBetweenBlocks += 100;
+      }
+    }, 100);
 
     // const gameTwoInterval = () => {
-    //   const count = this.game.equations.equationCount;
-    //   const timer = 2 + 2 * Math.pow(Math.E, -.05 * count);
     //   setTimeout(() => {
     //     this.game.move();
     //     this.game.createNumber();
