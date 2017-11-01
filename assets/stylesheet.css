@@ -1,3 +1,7 @@
+body {
+  font-family: 'PT Serif', serif;
+}
+
 canvas {
   display: flex;
   justify-content: center;
