@@ -131,6 +131,43 @@ document.addEventListener("DOMContentLoaded", () => {
       canvas.addEventListener("click", handleStartAndEnd);
     });
   }
+
+  const sketchpad = document.getElementById("sketchpad-canvas");
+  sketchpad.width = 1000;
+  sketchpad.height = 550;
+
+  const ctx2 = sketchpad.getContext("2d");
+  ctx2.fillStyle = "black";
+  ctx2.fillRect(0, 0, 1000, 550);
+  ctx2.fillStyle = "white";
+  ctx2.font = "30pt Arial";
+  ctx2.fillText("This is a sketchpad in development; disregard", 70, 100);
+
+  // sketchpad.addEventListener('mousedown', activatePencil);
+  // sketchpad.addEventListener('mousemove', movePencil);
+  // sketchpad.addEventListener('mouseup', deactivatePencil);
+  // sketchpad.addEventListener('mouseleave', deactivatePencil);
+  //
+  // let drawStuff = false;
+  //
+  // function activatePencil() {
+  //   drawStuff = true;
+  //   draw();
+  // }
+  //
+  // function movePencil() {
+  //   if (drawStuff) {
+  //     draw();
+  //   }
+  // }
+  //
+  // function deactivatePencil() {
+  //   drawStuff = false;
+  // }
+  //
+  // function draw() {
+  //
+  // }
 });
 
 
