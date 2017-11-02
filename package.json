@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/pangland/JavaScript-Proposal/issues"
   },
-  "homepage": "https://github.com/pangland/JavaScript-Proposal#readme"
+  "homepage": "https://github.com/pangland/JavaScript-Proposal#readme",
+  "dependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  }
 }
