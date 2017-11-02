@@ -156,6 +156,7 @@ class Game {
 
     this.selectedNumbers = [];
     this.equations = new __WEBPACK_IMPORTED_MODULE_1__equations_js__["a" /* default */]();
+    this.generatedNumberCount = 0;
   }
 
   won() {
@@ -198,6 +199,7 @@ class Game {
     const randomColumn = this.randomStartingPos();
     this.incrementBlocksPerColumn(Math.round(randomColumn / 100));
     const newNumber = new __WEBPACK_IMPORTED_MODULE_0__number_js__["a" /* default */]([randomColumn, 50]);
+    this.generatedNumberCount += 1;
     this.fallingNumberBlocks[randomColumn / 100].push(newNumber);
     this.allNumberBlocks[randomColumn / 100].push(newNumber);
   }
@@ -569,9 +571,10 @@ class GameView {
         this.game.move();
         this.game.createNumber();
         this.game.draw(this.ctx);
-        const power = this.game.equations.equationCount * -.5;
+        const power = this.game.generatedNumberCount * -.05;
         timer = 1000 + Math.random() * 2000 + 2000 * Math.pow(Math.E, power);
         timeBetweenBlocks = 0;
+        console.log(timer);
       } else {
         timeBetweenBlocks += 100;
       }
