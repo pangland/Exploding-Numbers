@@ -164,13 +164,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function deactivatePencil() {
     drawStuff = false;
+    start = null;
   }
 
   function draw() {
-    // ctx2.clearRect(0, 0, ctx2.canvas.width, ctx2.canvas.height);
-    // debugger
     ctx2.lineWidth = 5;
-    ctx2.strokeStyle = 'red';
+    ctx2.strokeStyle = 'white';
     ctx2.beginPath();
     // ctx2.moveTo(event.offsetX, event.offsetY)
     if (start) {
