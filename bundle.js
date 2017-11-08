@@ -133,13 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const sketchpad = document.getElementById("sketchpad-canvas");
-  sketchpad.width = 1000;
+  sketchpad.width = 300;
   sketchpad.height = 550;
 
   const ctx2 = sketchpad.getContext("2d");
-  ctx2.fillStyle = "black";
-  ctx2.fillRect(0, 0, 1000, 550);
-  ctx2.fillStyle = "white";
+  ctx2.fillStyle = "gray";
+  ctx2.fillRect(0, 0, 300, 550);
+  ctx2.fillStyle = "blue";
   ctx2.font = "30pt Arial";
   ctx2.fillText("This is a sketchpad in development; disregard", 70, 100);
 
