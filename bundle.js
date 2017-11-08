@@ -140,8 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
   ctx2.fillStyle = "gray";
   ctx2.fillRect(0, 0, 300, 550);
   ctx2.fillStyle = "blue";
-  ctx2.font = "30pt Arial";
-  ctx2.fillText("This is a sketchpad in development; disregard", 70, 100);
+  ctx2.font = "20pt Arial";
+  ctx2.fillText("Sketchpad", 70, 50);
 
   sketchpad.addEventListener('mousedown', activatePencil);
   sketchpad.addEventListener('mousemove', movePencil);
@@ -180,6 +180,17 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx2.stroke();
     start = [event.offsetX, event.offsetY];
   }
+
+  document.getElementById("clear").addEventListener("click", clearSketchPad);
+
+  function clearSketchPad() {
+    ctx2.fillStyle = "gray";
+    ctx2.fillRect(0, 0, 300, 550);
+    ctx2.fillStyle = "blue";
+    ctx2.font = "20pt Arial";
+    ctx2.fillText("Sketchpad", 70, 50);
+  }
+
 });
 
 
