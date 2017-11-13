@@ -10,14 +10,15 @@ canvas {
   /*margin: 0 auto;*/
 }
 
-#game-canvas {
-  padding-top: 19px;
-}
 
 .canvas_container {
   display: flex;
   justify-content: center;
   margin: 0 auto;
+}
+
+#game-canvas {
+  padding-top: 20px;
 }
 
 h1 {
