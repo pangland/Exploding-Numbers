@@ -60,20 +60,44 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const music = new Audio('./assets/sounds/Elevator-music.mp3');
+music.volume = .5;
+music.loop = true;
+
+const clickSound = new Audio('./assets/sounds/click-effect.mp3');
+music.volume = .2;
+
+const sound = {
+  playMusic() {
+    music.play();
+  },
+
+  playClickSound() {
+    clickSound.load();
+    clickSound.play();
+  }
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = sound;
+
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sound_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sound_js__ = __webpack_require__(0);
 
 
 
@@ -89,8 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 550);
   ctx.fillStyle = "white";
-  ctx.font = "50pt Arial";
-  ctx.fillText("Click anywhere to start, player", 70, 100);
+  ctx.font = "14pt Arial";
+  ctx.fillText("s: Skips an equation, but remember that difficulty goes up with each skipped equation", 70, 100);
+  ctx.fillText("p: pauses/unpauses the game and shows controls", 70, 120);
+  ctx.fillText("r: resets the game", 70, 140);
+
 
   function handleStartAndEnd() {
     startGame();
@@ -99,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("click", handleStartAndEnd);
 
   function startGame() {
+    debugger;
     const game = new __WEBPACK_IMPORTED_MODULE_0__game_js__["a" /* default */]();
     function handleClick() {
       game.handleClick(event, ctx);
@@ -106,6 +134,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     canvas.removeEventListener('click', handleStartAndEnd);
     canvas.addEventListener("click", handleClick);
+
+    document.addEventListener('keypress', (e) => {
+      // debugger;
+      switch (e.key) {
+        case "s":
+          game.newEquation();
+          break;
+        case "r":
+          // canvas.removeEventListener('click', handleClick);
+          // handleStartAndEnd();
+          // canvas.removeEventListener('keypress', e);
+          break;
+      }
+    });
 
     __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].playMusic();
 
@@ -205,13 +247,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__equations_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sound_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__equations_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sound_js__ = __webpack_require__(0);
 
 
 
@@ -444,7 +486,7 @@ class Game {
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -529,7 +571,7 @@ class Number {
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -626,7 +668,7 @@ class Equations {
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -637,11 +679,24 @@ class GameView {
   }
 
   start(callback) {
+    function activateCallback() {
+      clearInterval(gameInterval);
+      clearInterval(moveInterval);
+      callback();
+    }
+
     let timer = 4000;
     let timeBetweenBlocks = 0;
     this.game.fillBottomRow();
     this.game.draw(this.ctx);
 
+
+    document.addEventListener('keypress', (e) => {
+      if (e.key === "r") {
+        document.removeEventListener('keypress', e);
+        activateCallback();
+      }
+    });
     // const gameInterval = setInterval(() => {
     //   this.game.move();
     //   this.game.createNumber();
@@ -677,48 +732,13 @@ class GameView {
       this.game.move();
       this.game.draw(this.ctx);
       if (this.game.won() || this.game.over()) {
-        clearInterval(gameInterval);
-        clearInterval(moveInterval);
-        callback();
+        activateCallback();
       }
     }, 10);
   }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (GameView);
-
-
-/***/ }),
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const music = new Audio('./assets/sounds/Elevator-music.mp3');
-music.volume = .5;
-music.loop = true;
-
-const clickSound = new Audio('./assets/sounds/click-effect.mp3');
-music.volume = .2;
-
-const sound = {
-  playMusic() {
-    music.play();
-  },
-
-  playClickSound() {
-    clickSound.load();
-    clickSound.play();
-  }
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = sound;
-
 
 
 /***/ })
