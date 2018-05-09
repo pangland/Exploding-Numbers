@@ -128,7 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("click", handleStartAndEnd);
 
   function startGame() {
-    debugger;
     const game = new __WEBPACK_IMPORTED_MODULE_0__game_js__["a" /* default */]();
     function handleClick() {
       game.handleClick(event, ctx);
@@ -138,7 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.addEventListener("click", handleClick);
 
     document.addEventListener('keypress', (e) => {
-      // debugger;
       switch (e.key) {
         case "s":
           game.newEquation();
@@ -697,7 +695,7 @@ class GameView {
       if (e.key === "r") {
         document.removeEventListener('keypress', e);
         activateCallback();
-      } 
+      }
     });
     // const gameInterval = setInterval(() => {
     //   this.game.move();
@@ -744,8 +742,6 @@ class GameView {
 
     setGameInterval(100);
     setMoveInterval(10);
-
-    // debugger;
 
     // const gameInterval = setInterval(() => {
     //   if (timer <= timeBetweenBlocks) {
