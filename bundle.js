@@ -109,19 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].playMusic();
 
-    debugger;
-
-    // const options = {
-    //   filename: "Elevator-music.mp3",
-    //   gain: 100,
-    //   debug: true,
-    //   player: "afplay",
-    //   device: "plugw0:0"
-    // };
-    //
-    // const sound = new soundplayer(options);
-    // sound.play();
-
     new __WEBPACK_IMPORTED_MODULE_1__game_view_js__["a" /* default */](game, ctx).start(() => {
       ctx.color = 'white';
 
@@ -434,8 +421,7 @@ class Game {
   newEquation() {
     let allNumbers = [].concat.apply([], this.allNumberBlocks);
     allNumbers = allNumbers.sort(() => Math.random());
-    console.log(allNumbers);
-    const numbersToGrab = Math.floor(Math.random() * allNumbers.length % 3) + 1;
+    const numbersToGrab = Math.floor(Math.random() * allNumbers.length % 2) + 1;
 
     let equationSolution = allNumbers.slice(0, numbersToGrab);
     equationSolution = equationSolution.map((number) => {
@@ -578,7 +564,13 @@ class Equations {
         this.multiply(solution);
         break;
       case '/':
-        this.divide(solution);
+        if (this.equationCount < 5) {
+          this.add(solution);
+        } else if (this.equationCount < 10) {
+          this.multiply(solution);
+        } else {
+          this.divide(solution);
+        }
         break;
     }
   }
@@ -592,7 +584,11 @@ class Equations {
   subtract(solution) {
     const firstValue = Math.floor(Math.random() * 5 * this.equationCount + solution);
     const secondValue = firstValue - solution;
-    this.equation = `${firstValue} - ${secondValue}`;
+    if (firstValue > 100) {
+      this.add(solution);
+    } else {
+      this.equation = `${firstValue} - ${secondValue}`;
+    }
   }
 
   multiply(solution) {
@@ -657,7 +653,6 @@ class GameView {
         const power = this.game.generatedNumberCount * -.05;
         timer = 1000 + Math.random() * 2000 + 2000 * Math.pow(Math.E, power);
         timeBetweenBlocks = 0;
-        console.log(timer);
       } else {
         timeBetweenBlocks += 100;
       }
@@ -717,7 +712,6 @@ const sound = {
   playClickSound() {
     clickSound.load();
     clickSound.play();
-    // clickSound.currentTime = 0;
   }
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = sound;

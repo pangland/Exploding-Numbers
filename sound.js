@@ -13,6 +13,5 @@ export const sound = {
   playClickSound() {
     clickSound.load();
     clickSound.play();
-    // clickSound.currentTime = 0;
   }
 };
