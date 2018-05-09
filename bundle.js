@@ -60,19 +60,25 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_view_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sound_js__ = __webpack_require__(14);
 
 
+
+// import soundplayer from 'sound-player';
+// import player from 'play-sound';
 
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("game-canvas");
@@ -100,6 +106,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     canvas.removeEventListener('click', handleStartAndEnd);
     canvas.addEventListener("click", handleClick);
+
+    __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].playMusic();
+
+    debugger;
+
+    // const options = {
+    //   filename: "Elevator-music.mp3",
+    //   gain: 100,
+    //   debug: true,
+    //   player: "afplay",
+    //   device: "plugw0:0"
+    // };
+    //
+    // const sound = new soundplayer(options);
+    // sound.play();
 
     new __WEBPACK_IMPORTED_MODULE_1__game_view_js__["a" /* default */](game, ctx).start(() => {
       ctx.color = 'white';
@@ -190,17 +211,18 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx2.font = "20pt Arial";
     ctx2.fillText("Sketchpad", 70, 50);
   }
-
 });
 
 
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__equations_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__equations_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sound_js__ = __webpack_require__(14);
+
 
 
 
@@ -320,6 +342,7 @@ class Game {
     this.allNumberBlocks.forEach((columns) => {
       columns.forEach((number) => {
         if (number.isClicked(e.offsetX, e.offsetY)) {
+          __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].playClickSound();
           this.handleNumber(number);
           this.correctMatch();
           this.draw(ctx);
@@ -432,7 +455,7 @@ class Game {
 
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -517,7 +540,7 @@ class Number {
 
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -604,7 +627,7 @@ class Equations {
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -665,6 +688,40 @@ class GameView {
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (GameView);
+
+
+/***/ }),
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const music = new Audio('./assets/sounds/Elevator-music.mp3');
+music.volume = .5;
+music.loop = true;
+
+const clickSound = new Audio('./assets/sounds/click-effect.mp3');
+music.volume = .2;
+
+const sound = {
+  playMusic() {
+    music.play();
+  },
+
+  playClickSound() {
+    clickSound.load();
+    clickSound.play();
+    // clickSound.currentTime = 0;
+  }
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = sound;
+
 
 
 /***/ })
