@@ -113,10 +113,12 @@ document.addEventListener("DOMContentLoaded", () => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 550);
   ctx.fillStyle = "white";
-  ctx.font = "14pt Arial";
-  ctx.fillText("s: Skips an equation, but remember that difficulty goes up with each skipped equation", 70, 100);
-  ctx.fillText("p: pauses/unpauses the game and shows controls", 70, 120);
-  ctx.fillText("r: resets the game", 70, 140);
+  ctx.font = "50pt Arial";
+  ctx.fillText("Click anywhere to start, player", 70, 100);
+  // ctx.fillText("press - S - to skips an equation; remember that the game treats it like you've solved it", 70, 100);
+  // ctx.fillText("press - P - to pause/unpause the game and show this screen", 70, 120);
+  // ctx.fillText("press - R - to reset the game", 70, 140);
+  // ctx.fillText("press - I   - to activate impossible mode; you cannot win impossible mode", 70, 160);
 
 
   function handleStartAndEnd() {
@@ -695,7 +697,7 @@ class GameView {
       if (e.key === "r") {
         document.removeEventListener('keypress', e);
         activateCallback();
-      }
+      } 
     });
     // const gameInterval = setInterval(() => {
     //   this.game.move();
@@ -703,18 +705,60 @@ class GameView {
     //   this.game.draw(this.ctx);
     // }, 4000);
 
-    const gameInterval = setInterval(() => {
-      if (timer <= timeBetweenBlocks) {
+    let gameInterval;
+    let moveInterval;
+
+    const setGameInterval = ((time) => {
+      clearInterval(gameInterval);
+      gameInterval = setInterval(() => {
+        if (timer <= timeBetweenBlocks) {
+          this.game.move();
+          this.game.createNumber();
+          this.game.draw(this.ctx);
+          const power = this.game.generatedNumberCount * -.05;
+          timer = 1000 + Math.random() * 2000 + 2000 * Math.pow(Math.E, power);
+          timeBetweenBlocks = 0;
+        } else {
+          timeBetweenBlocks += 100;
+        }
+      }, time);
+    });
+
+    const setMoveInterval = ((time) => {
+      clearInterval(moveInterval);
+      moveInterval = setInterval(() => {
         this.game.move();
-        this.game.createNumber();
         this.game.draw(this.ctx);
-        const power = this.game.generatedNumberCount * -.05;
-        timer = 1000 + Math.random() * 2000 + 2000 * Math.pow(Math.E, power);
-        timeBetweenBlocks = 0;
-      } else {
-        timeBetweenBlocks += 100;
-      }
-    }, 100);
+        if (this.game.won() || this.game.over()) {
+          activateCallback();
+        }
+      }, 10);
+    });
+
+    const dragonforce = (() => {
+      setTimeout(() => {
+        setGameInterval(10);
+        setMoveInterval(1);
+      }, 1100);
+    });
+
+    setGameInterval(100);
+    setMoveInterval(10);
+
+    // debugger;
+
+    // const gameInterval = setInterval(() => {
+    //   if (timer <= timeBetweenBlocks) {
+    //     this.game.move();
+    //     this.game.createNumber();
+    //     this.game.draw(this.ctx);
+    //     const power = this.game.generatedNumberCount * -.05;
+    //     timer = 1000 + Math.random() * 2000 + 2000 * Math.pow(Math.E, power);
+    //     timeBetweenBlocks = 0;
+    //   } else {
+    //     timeBetweenBlocks += 100;
+    //   }
+    // }, 100);
 
     // const gameTwoInterval = () => {
     //   setTimeout(() => {
@@ -728,13 +772,13 @@ class GameView {
     //   }
     // };
 
-    const moveInterval = setInterval(() => {
-      this.game.move();
-      this.game.draw(this.ctx);
-      if (this.game.won() || this.game.over()) {
-        activateCallback();
-      }
-    }, 10);
+    // const moveInterval = setInterval(() => {
+    //   this.game.move();
+    //   this.game.draw(this.ctx);
+    //   if (this.game.won() || this.game.over()) {
+    //     activateCallback();
+    //   }
+    // }, 10);
   }
 }
 
