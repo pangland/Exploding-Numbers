@@ -68,6 +68,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* unused harmony export musicOn */
 const music = new Audio('./assets/sounds/Elevator-music.mp3');
 music.volume = .5;
 music.loop = true;
@@ -75,9 +76,27 @@ music.loop = true;
 const clickSound = new Audio('./assets/sounds/click-effect.mp3');
 music.volume = .2;
 
+let musicOn = false;
+
 const sound = {
+  soundState() {
+    let value = false;
+
+    function switchValue() {
+      value = value ? false : true;
+    }
+
+    function soundOn() {
+      return value;
+    }
+  },
+
   playMusic() {
     music.play();
+  },
+
+  stopSound() {
+    music.pause();
   },
 
   playClickSound() {
@@ -121,6 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // ctx.fillText("press - I   - to activate impossible mode; you cannot win impossible mode", 70, 160);
 
 
+  let soundOn = false;
+
   function handleStartAndEnd() {
     startGame();
   }
@@ -146,10 +167,22 @@ document.addEventListener("DOMContentLoaded", () => {
           // handleStartAndEnd();
           // canvas.removeEventListener('keypress', e);
           break;
+        case "m":
+          if (soundOn) {
+            console.log('yo');
+            __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].stopSound();
+            soundOn = false;
+          } else {
+            console.log('dog');
+            __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].playMusic();
+            soundOn = true;
+          }
+          break;
       }
     });
 
     __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].playMusic();
+    soundOn = true;
 
     new __WEBPACK_IMPORTED_MODULE_1__game_view_js__["a" /* default */](game, ctx).start(() => {
       ctx.color = 'white';
