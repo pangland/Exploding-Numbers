@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillText('r  : Restarts the round', 350, 310);
     ctx.fillText('m: Toggles the background music', 350, 340);
     ctx.fillText('c : Clears sketchpad', 350, 370);
+    ctx.fillText('d : Deselects all numbers', 350, 400);
   }
 
   ctx.fillStyle = "black";
@@ -167,6 +168,9 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
         case "c":
           clearSketchPad();
+          break;
+        case "d":
+          game.deselectAllNumbers();
           break;
       }
     });
@@ -348,6 +352,14 @@ class Game {
     this.generatedNumberCount += 1;
     this.fallingNumberBlocks[randomColumn / 100].push(newNumber);
     this.allNumberBlocks[randomColumn / 100].push(newNumber);
+  }
+
+  deselectAllNumbers() {
+    this.selectedNumbers.forEach((number) => {
+      number.toggleColor();
+    });
+
+    this.selectedNumbers = [];
   }
 
   incrementBlocksPerColumn(columnNumber) {
