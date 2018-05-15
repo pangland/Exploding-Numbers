@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ctx = canvas.getContext("2d");
 
   function instructionPrompt() {
+    ctx.fillStyle = "white";
     ctx.font = '17pt Arial';
     ctx.fillText('Special Hotkeys:', 350, 250);
     ctx.fillText('s : Skips an equation; difficulty still goes up', 350, 280);
@@ -190,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (game.won()) {
         ctx.fillStyle = "black";
         ctx.fillRect(40, 100, 920, 350);
+        ctx.fillStyle = "white";
         ctx.fillText("Expression: Who's awesome?", 350, 20);
         ctx.fillText("Answer: You're awesome!", 350, 45);
         ctx.font = '50pt Arial';
