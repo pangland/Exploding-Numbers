@@ -68,7 +68,6 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony export musicOn */
 const music = new Audio('./assets/sounds/Elevator-music.mp3');
 music.volume = .5;
 music.loop = true;
@@ -76,21 +75,7 @@ music.loop = true;
 const clickSound = new Audio('./assets/sounds/click-effect.mp3');
 music.volume = .2;
 
-let musicOn = false;
-
 const sound = {
-  soundState() {
-    let value = false;
-
-    function switchValue() {
-      value = value ? false : true;
-    }
-
-    function soundOn() {
-      return value;
-    }
-  },
-
   playMusic() {
     music.play();
   },
@@ -129,16 +114,23 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.height = 550;
 
   const ctx = canvas.getContext("2d");
+
+  function instructionPrompt() {
+    ctx.font = '17pt Arial';
+    ctx.fillText('Special Hotkeys:', 350, 250);
+    ctx.fillText('s : Skips an equation; difficulty still goes up', 350, 280);
+    ctx.fillText('r  : Restarts the round', 350, 310);
+    ctx.fillText('m: Toggles the background music', 350, 340);
+    ctx.fillText('c : Clears sketchpad', 350, 370);
+  }
+
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 550);
   ctx.fillStyle = "white";
   ctx.font = "50pt Arial";
   ctx.fillText("Click anywhere to start, player", 70, 100);
-  // ctx.fillText("press - S - to skips an equation; remember that the game treats it like you've solved it", 70, 100);
-  // ctx.fillText("press - P - to pause/unpause the game and show this screen", 70, 120);
-  // ctx.fillText("press - R - to reset the game", 70, 140);
-  // ctx.fillText("press - I   - to activate impossible mode; you cannot win impossible mode", 70, 160);
 
+  instructionPrompt();
 
   let soundOn = false;
 
@@ -162,11 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
         case "s":
           game.newEquation();
           break;
-        case "r":
-          // canvas.removeEventListener('click', handleClick);
-          // handleStartAndEnd();
-          // canvas.removeEventListener('keypress', e);
-          break;
         case "m":
           if (soundOn) {
             console.log('yo');
@@ -177,6 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
             __WEBPACK_IMPORTED_MODULE_2__sound_js__["a" /* sound */].playMusic();
             soundOn = true;
           }
+          break;
+        case "c":
+          clearSketchPad();
           break;
       }
     });
@@ -194,6 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.font = '17pt arial';
 
       if (game.won()) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(40, 100, 920, 350);
         ctx.fillText("Expression: Who's awesome?", 350, 20);
         ctx.fillText("Answer: You're awesome!", 350, 45);
         ctx.font = '50pt Arial';
@@ -201,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.strokeText('YOU SAVED MATH!', 170, 150);
       } else {
         ctx.fillStyle = "black";
-        ctx.fillRect(40, 100, 960, 150);
+        ctx.fillRect(40, 100, 920, 350);
         ctx.fillStyle = "white";
         ctx.fillText('Expression: Did you just fail?', 350, 20);
         ctx.fillText("Answer: You did.", 350, 45);
@@ -212,6 +204,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       ctx.fillText('Click anywhere to play again!', 50, 225);
       ctx.strokeText('Click anywhere to play again!', 50, 225);
+
+      // ctx.font = '17pt arial';
+      // ctx.fillText('Special Hotkeys:', 350, 250);
+      // ctx.fillText('s : Skips an equation; difficulty still goes up', 350, 280);
+      // ctx.fillText('r  : Restarts the round', 350, 310);
+      // ctx.fillText('m: Toggles the background music', 350, 340);
+      instructionPrompt();
 
       canvas.removeEventListener('click', handleClick);
       canvas.addEventListener("click", handleStartAndEnd);
